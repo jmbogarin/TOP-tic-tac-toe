@@ -51,6 +51,7 @@
             }
         }  
         const displayMsg = (msg) => {
+            UIElements.display.classList.add('fade-in')
             if (msg === "turn") {
                 const player = gameHandler.getCurrentPlayer();
                 UIElements.display.textContent = `It's ${player.getName()}'s turn (${player.getMark()})`;
@@ -60,6 +61,8 @@
             } else {
                 UIElements.display.textContent = msg;
             }
+            setTimeout(() => {UIElements.display.classList.remove('fade-in')}, 600)
+            
         }
         return {
             addMark,

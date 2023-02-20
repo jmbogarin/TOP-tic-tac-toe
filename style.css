@@ -31,6 +31,25 @@ main {
     color: tomato;
 }
 
+.fade-in {
+	opacity: 1;
+	animation-name: fadeIn;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: .6s;
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+        scale: .8;
+	}
+	100% {
+		opacity: 1;
+        scale: 1;
+	}
+}
+
 .board {
     display: grid;
     grid-template: repeat(3, 100px) / repeat(3, 100px);
