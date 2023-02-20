@@ -2,10 +2,12 @@
 
 (function() {
     const UIElements = (() => {
+        const display = document.querySelector('#display');
         const resetBtn = document.querySelector("#reset-btn");
         const board = document.querySelector(".board");
         const cells = board.children;
         return {
+            display,
             resetBtn,
             board,
             cells
@@ -47,10 +49,22 @@
             for (const mark in marks) {
                 UIElements.cells[mark].textContent = marks[mark]
             }
-        }   
+        }  
+        const displayMsg = (msg) => {
+            if (msg === "turn") {
+                const player = gameHandler.getCurrentPlayer();
+                UIElements.display.textContent = `It's ${player.getName()}'s turn (${player.getMark()})`;
+            } else if (msg === "winer") {
+                const winer = gameHandler.getWiner();
+                UIElements.display.textContent = `${winer} wins!`;
+            } else {
+                UIElements.display.textContent = msg;
+            }
+        }
         return {
             addMark,
-            renderBoard    
+            renderBoard,
+            displayMsg 
         }
     })();
 
@@ -58,16 +72,21 @@
         const _player1 = Player('Juan', 'X');
         const _player2 = Player('Manuel', 'O');
         let currentPlayer = _player1;
-
+        let winer;
         let gameOn = true;
-    
-        const changePlayer = () => currentPlayer = currentPlayer === _player2 ? _player1 : _player2;
-        
-        const getCurrentPlayer = () => currentPlayer
 
+        const getWiner = () => winer;
+        const getCurrentPlayer = () => currentPlayer;
+    
+        const changePlayer = () => {
+            currentPlayer = (currentPlayer === _player2) ? _player1 : _player2;
+            displayController.displayMsg("turn");
+        }
+        
         const newGame = () => {
             gameboard.resetBoard();
             gameOn = true;
+            displayController.displayMsg("turn");
             displayController.renderBoard();
         }
 
@@ -75,13 +94,16 @@
             if (e.target.className !== "cell" || !gameOn) return
 
             const cellNum = Array.from(e.target.parentNode.children).indexOf(e.target);
-            const mark = getCurrentPlayer().getMark();
+            const mark = currentPlayer.getMark();
     
             if (gameboard.setMark(cellNum, mark)) {
                 displayController.addMark(cellNum, mark);
-                const w = checkWinner();
-                if (w){
-                    console.log('Winer is: ' + w)
+                winer = checkWinner();
+                if (winer){
+                    displayController.displayMsg("winer")
+                    gameOn = false;
+                } else if(gameboard.getBoard().indexOf("")===-1) {
+                    displayController.displayMsg("Tie!")
                     gameOn = false;
                 } else {
                     changePlayer();
@@ -103,10 +125,11 @@
           }
 
         return {
-            getCurrentPlayer,
             changePlayer,
             makeMove, 
-            newGame
+            newGame,
+            getCurrentPlayer,
+            getWiner
         }
     })();
 

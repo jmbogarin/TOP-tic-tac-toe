@@ -26,6 +26,11 @@ main {
     gap: 30px;
 }
 
+#display {
+    font-size: 35px;
+    color: tomato;
+}
+
 .board {
     display: grid;
     grid-template: repeat(3, 100px) / repeat(3, 100px);
